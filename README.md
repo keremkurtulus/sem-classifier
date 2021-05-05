@@ -1,7 +1,11 @@
 # INSTALLATION
 
-1. Install dependencies
+To clone this repo
+```
+git clone git@github.com:keremkurtulus/sem-classifier.git
+```
 
+1. Install dependencies
 ```
 $ npm i
 ```
@@ -9,3 +13,7 @@ $ npm i
 2. Move model directory into the `public/keras`
 3. In `settings.js`, change the value of _MODEL_FOLDER_NAME_ to moved model folder name.
 4. In `settings.js`, set _TENSOR_IMAGE_SIZE_ for suitable image size for related model.
+5. Run for development
+```
+$ npm start
+```
