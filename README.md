@@ -2,7 +2,7 @@
 
 To clone this repo
 ```
-git clone git@github.com:keremkurtulus/sem-classifier.git
+$ git clone git@github.com:keremkurtulus/sem-classifier.git
 ```
 
 1. Install dependencies
