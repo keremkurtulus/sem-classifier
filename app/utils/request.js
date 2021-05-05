@@ -1,3 +1,4 @@
+import axios from 'axios';
 /**
  * Parses the JSON returned by a network request
  *
@@ -37,8 +38,6 @@ function checkStatus(response) {
  *
  * @return {object}           The response data
  */
-export default function request(url, options) {
-  return fetch(url, options)
-    .then(checkStatus)
-    .then(parseJSON);
+export default function request(axiosParams) {
+  return axios(axiosParams).then(checkStatus);
 }
