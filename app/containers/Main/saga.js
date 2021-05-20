@@ -36,7 +36,7 @@ export function* classify() {
         'content-type': 'multipart/form-data',
       },
     });
-    yield put(classifyImagesDone(results));
+    yield put(classifyImagesDone(results.data));
     yield put(changeImages([]));
   } catch (err) {
     console.log('err', err);

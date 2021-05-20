@@ -13,7 +13,7 @@ import {
 
 export const initialState = {
   images: [],
-  results: {},
+  results: [],
   loading: false,
   error: false,
 };
