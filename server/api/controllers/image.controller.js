@@ -11,7 +11,7 @@ const pick = require('../utils/pick');
 const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
 const { imageService } = require('../services');
-const { TENSOR_IMAGE_SIZE } = require('./../../../settings');
+const { TENSOR_IMAGE_SIZE, MODEL_FOLDER_NAME } = require('./../../../settings');
 
 function sleep(ms) {
   return new Promise(resolve => {
@@ -90,7 +90,7 @@ const getShapedImage = imgElement => {
 
 const predictModel = async imagePath => {
   const model = await tf.loadGraphModel(
-    'http://localhost:3000/keras/model5/model.json',
+    `http://localhost:3000/keras/${MODEL_FOLDER_NAME}/model.json`,
   );
   let tensorImg = readImage(imagePath);
 
@@ -113,12 +113,14 @@ const predictModel = async imagePath => {
 
   console.log(prediction);
 
+  // probability array of categaries
   const probabilities = prediction; /* prediction.map(
     p => Math.round((p + Number.EPSILON) * 100) / 100,
   ); // tf.softmax(prediction).dataSync(); */
 
   console.log('probabilities', probabilities);
 
+  // get maximum argument of results
   const argMaxData = tf.argMax(probabilities).dataSync()[0];
 
   console.log('argMaxData', argMaxData);
@@ -126,6 +128,7 @@ const predictModel = async imagePath => {
   return [argMaxData, probabilities[argMaxData]];
 };
 
+// Just for test
 (async () => {
   console.log('Result', await predictModel(`public/uploads/patterned.png`));
 })();
