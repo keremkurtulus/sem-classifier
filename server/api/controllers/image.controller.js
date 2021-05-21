@@ -129,9 +129,9 @@ const predictModel = async imagePath => {
 };
 
 // Just for test
-(async () => {
+/* (async () => {
   console.log('Result', await predictModel(`public/uploads/patterned.png`));
-})();
+})(); */
 
 const uploadAndClassify = catchAsync(async (req, res) => {
   // await sleep(1000);
