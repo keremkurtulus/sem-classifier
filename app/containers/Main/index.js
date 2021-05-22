@@ -5,11 +5,10 @@
  *
  */
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Helmet } from 'react-helmet';
-import { FormattedMessage } from 'react-intl';
 import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
 
@@ -24,8 +23,12 @@ import makeSelectMain, {
 } from './selectors';
 import reducer from './reducer';
 import saga from './saga';
-import messages from './messages';
-import { changeImages, classifyImages, classifyImagesDone } from './actions';
+import {
+  changeImages,
+  classifyImages,
+  classifyImagesDone,
+  loadUploadedImages,
+} from './actions';
 import ImageUpload from '../../components/ImageUpload';
 
 function CountProgress({ result }) {
@@ -48,10 +51,15 @@ export function Main({
   onChangeImages,
   onClassifyImages,
   onRefreshResults,
+  onLoadUploadedResults,
   main,
 }) {
   useInjectReducer({ key: 'main', reducer });
   useInjectSaga({ key: 'main', saga });
+
+  useEffect(() => {
+    onLoadUploadedResults();
+  }, []);
 
   const handleImagesChange = imageList => {
     onChangeImages(imageList);
@@ -77,7 +85,7 @@ export function Main({
               <div className="hero-inner">
                 <div className="hero-copy">
                   <h1 className="hero-title mt-0 is-revealing">
-                    <FormattedMessage {...messages.header} />
+                    SEM Classifier!
                   </h1>
                   <p className="hero-paragraph is-revealing">
                     Use this service to automatically classify and tag your SEM
@@ -145,163 +153,32 @@ export function Main({
               </div>
             </div>
             {results &&
-              results.map((result, i) => (
-                <div key={String(i)}>
-                  <div
-                    className=""
-                    style={{
-                      display: 'flex',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                    }}
-                  >
-                    <div style={{ paddingRight: '70px' }}>
-                      <img
-                        alt=""
-                        src={`uploads/${result.fileName}`}
-                        style={{ maxHeight: '100px' }}
-                      />
+              Array.from(results)
+                .reverse()
+                .map(historyResult =>
+                  historyResult.map((result, i) => (
+                    <div key={String(i)}>
+                      <div
+                        className=""
+                        style={{
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                        }}
+                      >
+                        <div style={{ paddingRight: '70px' }}>
+                          <img
+                            alt=""
+                            src={`uploads/${result.fileName}`}
+                            style={{ maxHeight: '100px' }}
+                          />
+                        </div>
+                        <CountProgress result={result} />
+                      </div>
                     </div>
-                    <CountProgress result={result} />
-                  </div>
-                </div>
-              ))}
+                  )),
+                )}
           </section>
-
-          {/* <section className="features section">
-            <div className="container">
-              <div className="features-inner section-inner">
-                <div className="features-wrap">
-                  <div className="feature">
-                    <div className="feature-inner">
-                      <div className="feature-header mb-16">
-                        <div className="feature-icon mr-16">
-                          <svg
-                            width="32"
-                            height="32"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <g fillRule="nonzero" fill="none">
-                              <path
-                                d="M7 8H1a1 1 0 0 1-1-1V1a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1zM19 8h-6a1 1 0 0 1-1-1V1a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1z"
-                                fill="#4353FF"
-                              />
-                              <path
-                                d="M19 20h-6a1 1 0 0 1-1-1v-6a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1z"
-                                fill="#43F1FF"
-                              />
-                              <path
-                                d="M31 8h-6a1 1 0 0 1-1-1V1a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1z"
-                                fill="#4353FF"
-                              />
-                              <path
-                                d="M7 20H1a1 1 0 0 1-1-1v-6a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1z"
-                                fill="#43F1FF"
-                              />
-                              <path
-                                d="M7 32H1a1 1 0 0 1-1-1v-6a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1z"
-                                fill="#4353FF"
-                              />
-                              <path
-                                d="M29.5 18h-3a.5.5 0 0 1-.5-.5v-3a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-.5.5z"
-                                fill="#43F1FF"
-                              />
-                              <path
-                                d="M17.5 30h-3a.5.5 0 0 1-.5-.5v-3a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-.5.5zM29.5 30h-3a.5.5 0 0 1-.5-.5v-3a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-.5.5z"
-                                fill="#4353FF"
-                              />
-                            </g>
-                          </svg>
-                        </div>
-                        <h4 className="feature-title m-0">Discover</h4>
-                      </div>
-                      <p className="text-sm mb-0">
-                        A pseudo-Latin text used in web design, layout, and
-                        printing in place of things to emphasise design
-                        elements.
-                      </p>
-                    </div>
-                  </div>
-                  <div className="feature">
-                    <div className="feature-inner">
-                      <div className="feature-header mb-16">
-                        <div className="feature-icon mr-16">
-                          <svg
-                            width="32"
-                            height="32"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <g fillRule="nonzero" fill="none">
-                              <path
-                                d="M4 12H0V5a5.006 5.006 0 0 1 5-5h7v4H5a1 1 0 0 0-1 1v7z"
-                                fill="#43F1FF"
-                              />
-                              <path
-                                d="M32 12h-4V5a1 1 0 0 0-1-1h-7V0h7a5.006 5.006 0 0 1 5 5v7zM12 32H5a5.006 5.006 0 0 1-5-5v-7h4v7a1 1 0 0 0 1 1h7v4z"
-                                fill="#4353FF"
-                              />
-                              <path
-                                d="M27 32h-7v-4h7a1 1 0 0 0 1-1v-7h4v7a5.006 5.006 0 0 1-5 5z"
-                                fill="#43F1FF"
-                              />
-                            </g>
-                          </svg>
-                        </div>
-                        <h4 className="feature-title m-0">Discover</h4>
-                      </div>
-                      <p className="text-sm mb-0">
-                        A pseudo-Latin text used in web design, layout, and
-                        printing in place of things to emphasise design
-                        elements.
-                      </p>
-                    </div>
-                  </div>
-                  <div className="feature">
-                    <div className="feature-inner">
-                      <div className="feature-header mb-16">
-                        <div className="feature-icon mr-16">
-                          <svg
-                            width="32"
-                            height="32"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <g fill="none" fillRule="nonzero">
-                              <path
-                                d="M16 9c2.206 0 4-1.794 4-4s-1.794-4-4-4-4 1.794-4 4 1.794 4 4 4z"
-                                fill="#4353FF"
-                              />
-                              <path
-                                d="M27 9c2.206 0 4-1.794 4-4s-1.794-4-4-4-4 1.794-4 4 1.794 4 4 4z"
-                                fill="#43F1FF"
-                              />
-                              <path
-                                d="M27 12c-2.206 0-4 1.794-4 4s1.794 4 4 4 4-1.794 4-4-1.794-4-4-4z"
-                                fill="#4353FF"
-                              />
-                              <path
-                                d="M5 23c-2.206 0-4 1.794-4 4s1.794 4 4 4 4-1.794 4-4-1.794-4-4-4z"
-                                fill="#43F1FF"
-                              />
-                              <path
-                                d="M27 23c-1.859 0-3.41 1.28-3.858 3h-3.284A3.994 3.994 0 0 0 17 23.142v-3.284c1.72-.447 3-2 3-3.858 0-2.206-1.794-4-4-4-1.859 0-3.41 1.28-3.858 3H8.858A3.994 3.994 0 0 0 6 12.142V8.858c1.72-.447 3-2 3-3.858 0-2.206-1.794-4-4-4S1 2.794 1 5c0 1.858 1.28 3.41 3 3.858v3.284c-1.72.447-3 2-3 3.858 0 2.206 1.794 4 4 4 1.859 0 3.41-1.28 3.858-3h3.284A3.994 3.994 0 0 0 15 19.858v3.284c-1.72.447-3 2-3 3.858 0 2.206 1.794 4 4 4 1.859 0 3.41-1.28 3.858-3h3.284c.447 1.72 2 3 3.858 3 2.206 0 4-1.794 4-4s-1.794-4-4-4z"
-                                fill="#4353FF"
-                              />
-                            </g>
-                          </svg>
-                        </div>
-                        <h4 className="feature-title m-0">Discover</h4>
-                      </div>
-                      <p className="text-sm mb-0">
-                        A pseudo-Latin text used in web design, layout, and
-                        printing in place of things to emphasise design
-                        elements.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section> */}
         </main>
 
         <footer className="site-footer">
@@ -364,60 +241,7 @@ export function Main({
               </g>
             </svg>
           </div>
-          <div className="container">
-            {/* <div className="site-footer-inner has-top-divider">
-              <div className="footer-copyright">
-                &copy; 2021 Ellie, all rights reserved
-              </div>
-              <ul className="footer-social-links list-reset">
-                <li>
-                  <a href="#">
-                    <span className="screen-reader-text">Facebook</span>
-                    <svg
-                      width="16"
-                      height="16"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M6.023 16L6 9H3V6h3V4c0-2.7 1.672-4 4.08-4 1.153 0 2.144.086 2.433.124v2.821h-1.67c-1.31 0-1.563.623-1.563 1.536V6H13l-1 3H9.28v7H6.023z"
-                        fill="#FFFFFF"
-                      />
-                    </svg>
-                  </a>
-                </li>
-                <li>
-                  <a href="#">
-                    <span className="screen-reader-text">Twitter</span>
-                    <svg
-                      width="16"
-                      height="16"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M16 3c-.6.3-1.2.4-1.9.5.7-.4 1.2-1 1.4-1.8-.6.4-1.3.6-2.1.8-.6-.6-1.5-1-2.4-1-1.7 0-3.2 1.5-3.2 3.3 0 .3 0 .5.1.7-2.7-.1-5.2-1.4-6.8-3.4-.3.5-.4 1-.4 1.7 0 1.1.6 2.1 1.5 2.7-.5 0-1-.2-1.5-.4C.7 7.7 1.8 9 3.3 9.3c-.3.1-.6.1-.9.1-.2 0-.4 0-.6-.1.4 1.3 1.6 2.3 3.1 2.3-1.1.9-2.5 1.4-4.1 1.4H0c1.5.9 3.2 1.5 5 1.5 6 0 9.3-5 9.3-9.3v-.4C15 4.3 15.6 3.7 16 3z"
-                        fill="#FFFFFF"
-                      />
-                    </svg>
-                  </a>
-                </li>
-                <li>
-                  <a href="#">
-                    <span className="screen-reader-text">Google</span>
-                    <svg
-                      width="16"
-                      height="16"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M7.9 7v2.4H12c-.2 1-1.2 3-4 3-2.4 0-4.3-2-4.3-4.4 0-2.4 2-4.4 4.3-4.4 1.4 0 2.3.6 2.8 1.1l1.9-1.8C11.5 1.7 9.9 1 8 1 4.1 1 1 4.1 1 8s3.1 7 7 7c4 0 6.7-2.8 6.7-6.8 0-.5 0-.8-.1-1.2H7.9z"
-                        fill="#FFFFFF"
-                      />
-                    </svg>
-                  </a>
-                </li>
-              </ul>
-            </div> */}
-          </div>
+          <div className="container" />
         </footer>
       </div>
     </>
@@ -431,6 +255,7 @@ Main.propTypes = {
   onChangeImages: PropTypes.func,
   onClassifyImages: PropTypes.func,
   onRefreshResults: PropTypes.func,
+  onLoadUploadedResults: PropTypes.func,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -444,6 +269,7 @@ function mapDispatchToProps(dispatch) {
     onChangeImages: images => dispatch(changeImages(images)),
     onClassifyImages: () => dispatch(classifyImages()),
     onRefreshResults: () => dispatch(classifyImagesDone([])),
+    onLoadUploadedResults: () => dispatch(loadUploadedImages()),
   };
 }
 

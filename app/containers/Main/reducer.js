@@ -9,6 +9,8 @@ import {
   CLASSIFY_IMAGES,
   CLASSIFY_IMAGES_ERROR,
   CLASSIFY_IMAGES_SUCCESS,
+  LOAD_UPLOADED_IMAGES,
+  LOAD_UPLOADED_IMAGES_SUCCESS,
 } from './constants';
 
 export const initialState = {
@@ -37,6 +39,15 @@ const mainReducer = (state = initialState, action) =>
       case CLASSIFY_IMAGES_ERROR:
         draft.error = action.error;
         draft.loading = false;
+        break;
+      case LOAD_UPLOADED_IMAGES:
+        draft.loading = true;
+        draft.error = false;
+        break;
+      case LOAD_UPLOADED_IMAGES_SUCCESS:
+        draft.results = action.results;
+        draft.loading = false;
+        draft.error = false;
         break;
     }
   });

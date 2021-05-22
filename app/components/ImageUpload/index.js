@@ -23,6 +23,7 @@ const Wrapper = styled.div`
   align-items: stretch;
   justify-content: space-around;
 `;
+
 const ImageItem = styled.div`
   width: 100px;
   height: 120px;
@@ -42,6 +43,7 @@ function ImageUpload({ images, onChange }) {
     console.log(imageList, addUpdateIndex);
     setImages(imageList);
   }; */
+
   return (
     <div>
       <ImageUploading
@@ -54,8 +56,6 @@ function ImageUpload({ images, onChange }) {
         {({
           imageList,
           onImageUpload,
-          onImageRemoveAll,
-          onImageUpdate,
           onImageRemove,
           isDragging,
           dragProps,
@@ -106,12 +106,6 @@ function ImageUpload({ images, onChange }) {
                       }}
                     />
                     <ImageButtonWrapper className="image-item__btn-wrapper">
-                      {/* <button
-                      className="button button-sm button-block"
-                      onClick={() => onImageUpdate(index)}
-                    >
-                      Update
-                    </button> */}
                       <button
                         className="button button-sm button-block"
                         style={{ marginTop: 10 }}

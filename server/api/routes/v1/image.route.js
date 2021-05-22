@@ -1,8 +1,6 @@
 const express = require('express');
 const path = require('path');
 const multer = require('multer');
-const validate = require('../../middlewares/validate');
-const imageValidation = require('../../validations/image.validation');
 const imageController = require('../../controllers/image.controller');
 const { MAX_IMAGE_UPLOAD_COUNT } = require('../../../../settings');
 

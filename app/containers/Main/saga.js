@@ -5,15 +5,16 @@
 import { call, put, select, takeLatest } from 'redux-saga/effects';
 import request from 'utils/request';
 import { makeSelectImages } from './selectors';
-import { CLASSIFY_IMAGES } from './constants';
+import { CLASSIFY_IMAGES, LOAD_UPLOADED_IMAGES } from './constants';
 import {
   changeImages,
   classifyImagesDone,
   classifyImagesFailed,
+  loadUploadedImagesDone,
 } from './actions';
 
 /**
- * Github repos request/response handler
+ * Classify images
  */
 export function* classify() {
   // Select images from store
@@ -28,15 +29,32 @@ export function* classify() {
 
   try {
     // Call our request helper (see 'utils/request')
-    const results = yield call(request, {
+    const results = (yield call(request, {
       method: 'post',
       url: requestURL,
       data: formData,
       headers: {
         'content-type': 'multipart/form-data',
       },
+    })).data;
+
+    // Get old results from local storage and concat with new results from server
+    const oldAndNewImages = yield call(async () => {
+      let oldImages = JSON.parse(await localStorage.getItem('SAVED_IMAGES'));
+
+      if (oldImages) {
+        oldImages.push(results);
+      } else {
+        oldImages = [results];
+      }
+
+      await localStorage.setItem('SAVED_IMAGES', JSON.stringify(oldImages));
+      return oldImages;
     });
-    yield put(classifyImagesDone(results.data));
+
+    console.log('oldAndNewImages', oldAndNewImages);
+
+    yield put(classifyImagesDone(oldAndNewImages));
     yield put(changeImages([]));
   } catch (err) {
     console.log('err', err);
@@ -49,9 +67,23 @@ export function* classify() {
 }
 
 /**
+ * Load uploaded images
+ */
+export function* sagaLoadUploadedImages() {
+  try {
+    const oldResults = yield call(async () => {
+      const oldImages = JSON.parse(await localStorage.getItem('SAVED_IMAGES'));
+      return oldImages || [];
+    });
+
+    yield put(loadUploadedImagesDone(oldResults));
+  } catch (err) {}
+}
+
+/**
  * Root saga manages watcher lifecycle
  */
-
 export default function* mainSaga() {
   yield takeLatest(CLASSIFY_IMAGES, classify);
+  yield takeLatest(LOAD_UPLOADED_IMAGES, sagaLoadUploadedImages);
 }
