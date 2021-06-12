@@ -15,6 +15,12 @@ export const initialState = {};
 
 /* eslint-disable default-case, no-param-reassign */
 const appReducer = (state = initialState, action) =>
-  produce(state, draft => {});
+  produce(state, draft => {
+    switch (action.type) {
+      case '':
+        draft.images = action.images;
+        break;
+    }
+  });
 
 export default appReducer;

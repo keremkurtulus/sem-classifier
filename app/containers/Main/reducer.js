@@ -9,6 +9,8 @@ import {
   CLASSIFY_IMAGES,
   CLASSIFY_IMAGES_ERROR,
   CLASSIFY_IMAGES_SUCCESS,
+  CLEAR_UPLOADED_IMAGES,
+  CLEAR_UPLOADED_IMAGES_SUCCESS,
   LOAD_UPLOADED_IMAGES,
   LOAD_UPLOADED_IMAGES_SUCCESS,
 } from './constants';
@@ -46,6 +48,15 @@ const mainReducer = (state = initialState, action) =>
         break;
       case LOAD_UPLOADED_IMAGES_SUCCESS:
         draft.results = action.results;
+        draft.loading = false;
+        draft.error = false;
+        break;
+      case CLEAR_UPLOADED_IMAGES:
+        draft.loading = true;
+        draft.error = false;
+        break;
+      case CLEAR_UPLOADED_IMAGES_SUCCESS:
+        draft.results = [];
         draft.loading = false;
         draft.error = false;
         break;

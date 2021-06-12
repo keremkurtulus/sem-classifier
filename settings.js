@@ -1,8 +1,12 @@
 module.exports = {
   /**
-   * Maximum size of image classified at the same time
+   * Maximum number of image classified at the same time
    */
   MAX_IMAGE_UPLOAD_COUNT: 5,
+  /**
+   * Maximum accaptable size of image to upload in MB each
+   */
+  MAX_IMAGE_UPLOAD_SIZE: 5,
   /**
    * The image size accapted by the model
    */

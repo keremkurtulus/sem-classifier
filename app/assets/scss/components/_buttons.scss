@@ -75,6 +75,15 @@
   }
 }
 
+.button-secondary {
+  color: color(secondary, 1) !important;
+  transition: background 0.15s ease;
+
+  &:disabled {
+    color: color(secondary, 2) !important;
+  }
+}
+
 .button-primary {
   background: mix(color(primary, 1), color(primary, 2));
   background: linear-gradient(

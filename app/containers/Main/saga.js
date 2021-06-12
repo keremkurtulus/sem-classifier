@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /**
  * Gets the repositories of the user from Github
  */
@@ -5,11 +6,16 @@
 import { call, put, select, takeLatest } from 'redux-saga/effects';
 import request from 'utils/request';
 import { makeSelectImages } from './selectors';
-import { CLASSIFY_IMAGES, LOAD_UPLOADED_IMAGES } from './constants';
+import {
+  CLASSIFY_IMAGES,
+  CLEAR_UPLOADED_IMAGES,
+  LOAD_UPLOADED_IMAGES,
+} from './constants';
 import {
   changeImages,
   classifyImagesDone,
   classifyImagesFailed,
+  clearUploadedImagesDone,
   loadUploadedImagesDone,
 } from './actions';
 
@@ -23,9 +29,7 @@ export function* classify() {
 
   const formData = new FormData();
 
-  images.map(img => {
-    formData.append('images', img.file);
-  });
+  images.map(img => formData.append('images', img.file));
 
   try {
     // Call our request helper (see 'utils/request')
@@ -77,7 +81,24 @@ export function* sagaLoadUploadedImages() {
     });
 
     yield put(loadUploadedImagesDone(oldResults));
-  } catch (err) {}
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+/**
+ * Clear old uploaded images
+ */
+export function* sagaClearUploadedImages() {
+  try {
+    yield call(() => {
+      localStorage.removeItem('SAVED_IMAGES');
+    });
+
+    yield put(clearUploadedImagesDone());
+  } catch (err) {
+    console.log(err);
+  }
 }
 
 /**
@@ -86,4 +107,5 @@ export function* sagaLoadUploadedImages() {
 export default function* mainSaga() {
   yield takeLatest(CLASSIFY_IMAGES, classify);
   yield takeLatest(LOAD_UPLOADED_IMAGES, sagaLoadUploadedImages);
+  yield takeLatest(CLEAR_UPLOADED_IMAGES, sagaClearUploadedImages);
 }

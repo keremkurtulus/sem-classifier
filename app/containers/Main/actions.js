@@ -11,6 +11,8 @@ import {
   CLASSIFY_IMAGES_SUCCESS,
   LOAD_UPLOADED_IMAGES,
   LOAD_UPLOADED_IMAGES_SUCCESS,
+  CLEAR_UPLOADED_IMAGES,
+  CLEAR_UPLOADED_IMAGES_SUCCESS,
 } from './constants';
 
 /**
@@ -74,5 +76,24 @@ export function loadUploadedImagesDone(results) {
   return {
     type: LOAD_UPLOADED_IMAGES_SUCCESS,
     results,
+  };
+}
+
+/**
+ * @description Clear old results
+ */
+export function clearUploadedImages() {
+  return {
+    type: CLEAR_UPLOADED_IMAGES,
+  };
+}
+
+/**
+ * @description When done clear uploaded images action
+ * @returns {Array}
+ */
+export function clearUploadedImagesDone() {
+  return {
+    type: CLEAR_UPLOADED_IMAGES_SUCCESS,
   };
 }

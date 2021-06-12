@@ -1,3 +1,4 @@
+/* eslint-disable */
 /**
  * Combine all reducers in this file and export the combined reducers.
  */

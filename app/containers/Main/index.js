@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable react/button-has-type */
 /**
  *
@@ -27,6 +28,7 @@ import {
   changeImages,
   classifyImages,
   classifyImagesDone,
+  clearUploadedImages,
   loadUploadedImages,
 } from './actions';
 import ImageUpload from '../../components/ImageUpload';
@@ -52,6 +54,7 @@ export function Main({
   onClassifyImages,
   onRefreshResults,
   onLoadUploadedResults,
+  onClearUploadedResults,
   main,
 }) {
   useInjectReducer({ key: 'main', reducer });
@@ -68,6 +71,11 @@ export function Main({
   const handleClassify = () => {
     onRefreshResults();
     onClassifyImages();
+  };
+
+  const handleClear = () => {
+    onRefreshResults();
+    onClearUploadedResults();
   };
 
   return (
@@ -178,6 +186,12 @@ export function Main({
                     </div>
                   )),
                 )}
+
+            {results && results.length > 0 && (
+              <button className="button button-secondary" onClick={handleClear}>
+                Clear Old Results
+              </button>
+            )}
           </section>
         </main>
 
@@ -256,6 +270,7 @@ Main.propTypes = {
   onClassifyImages: PropTypes.func,
   onRefreshResults: PropTypes.func,
   onLoadUploadedResults: PropTypes.func,
+  onClearUploadedResults: PropTypes.func,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -270,6 +285,7 @@ function mapDispatchToProps(dispatch) {
     onClassifyImages: () => dispatch(classifyImages()),
     onRefreshResults: () => dispatch(classifyImagesDone([])),
     onLoadUploadedResults: () => dispatch(loadUploadedImages()),
+    onClearUploadedResults: () => dispatch(clearUploadedImages()),
   };
 }
 

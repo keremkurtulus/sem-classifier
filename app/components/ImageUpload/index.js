@@ -31,9 +31,8 @@ const ImageItem = styled.div`
 `;
 const ImageButtonWrapper = styled.div``;
 
-const getImagesContainerHeight = imagesListSize => {
-  return Math.ceil(imagesListSize / 4.0) * 120 + 20;
-};
+const getImagesContainerHeight = imagesListSize =>
+  Math.ceil(imagesListSize / 4.0) * 120 + 20;
 
 function ImageUpload({ images, onChange }) {
   /* const [images, setImages] = React.useState([]); */
