@@ -5,6 +5,7 @@ const imageController = require('../../controllers/image.controller');
 const {
   MAX_IMAGE_UPLOAD_COUNT,
   MAX_IMAGE_UPLOAD_SIZE,
+  ACCEPTABLE_IMAGE_TYPES,
 } = require('../../../../settings');
 
 const router = express.Router();
@@ -19,9 +20,10 @@ const storage = multer.diskStorage({
 const upload = multer({
   storage,
   limits: { fileSize: MAX_IMAGE_UPLOAD_SIZE * 1000000 },
+  // eslint-disable-next-line consistent-return
   fileFilter: (req, file, cb) => {
     // Allowed ext
-    const filetypes = /jpeg|jpg|png|gif|tif/;
+    const filetypes = ACCEPTABLE_IMAGE_TYPES;
 
     // Check ext
     const extname = filetypes.test(

@@ -8,6 +8,10 @@ module.exports = {
    */
   MAX_IMAGE_UPLOAD_SIZE: 5,
   /**
+   * Accaptable image types
+   */
+  ACCEPTABLE_IMAGE_TYPES: /jpeg|jpg|png|gif|tif/,
+  /**
    * The image size accapted by the model
    */
   TENSOR_IMAGE_SIZE: 331,
