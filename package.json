@@ -65,7 +65,7 @@
   },
   "dependencies": {
     "@babel/polyfill": "7.4.3",
-    "@tensorflow/tfjs-node": "^3.6.1",
+    "@tensorflow/tfjs-node": "3.7.0",
     "axios": "^0.21.1",
     "chalk": "^2.4.2",
     "compression": "1.7.4",

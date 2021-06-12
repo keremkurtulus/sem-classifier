@@ -19,6 +19,23 @@ const storage = multer.diskStorage({
 const upload = multer({
   storage,
   limits: { fileSize: MAX_IMAGE_UPLOAD_SIZE * 1000000 },
+  fileFilter: (req, file, cb) => {
+    // Allowed ext
+    const filetypes = /jpeg|jpg|png|gif|tif/;
+
+    // Check ext
+    const extname = filetypes.test(
+      path.extname(file.originalname).toLowerCase(),
+    );
+    // Check mime
+    const mimetype = filetypes.test(file.mimetype);
+
+    if (mimetype && extname) {
+      return cb(null, true);
+    }
+
+    cb('Error: Images Only!');
+  },
 }).array('images', MAX_IMAGE_UPLOAD_COUNT);
 
 router
